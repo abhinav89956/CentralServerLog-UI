@@ -57,6 +57,17 @@ body {
   }
 }
 
+.logout-link {
+  color: #ef4444 !important;
+  margin-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  
+  &:hover {
+    background-color: rgba(239, 68, 68, 0.1) !important;
+    border-left: 4px solid #ef4444 !important;
+  }
+}
+
 .form-control {
   width: 100%;
   padding: 0.5rem 0.75rem;
