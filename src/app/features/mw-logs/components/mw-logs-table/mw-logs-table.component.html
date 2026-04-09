@@ -1,0 +1,59 @@
+<div class="card table-container">
+  <div *ngIf="loading" class="loading-state">
+    <p>Loading logs...</p>
+  </div>
+
+  <table class="logs-table" *ngIf="!loading && logs.length > 0">
+    <thead>
+      <tr>
+         <th>Description</th>
+          <th>Event</th>
+          <th>Subject Reference</th>
+          <th>Axction Type</th>
+          <th>Created Date</th>
+        <th>Message</th>
+        <th>Action</th>
+
+      </tr>
+    </thead>
+   <tbody>
+  <tr *ngFor="let log of logs">
+    <td>{{ log.description || '-' }}</td>
+
+    <td>
+      <span class="badge" [ngClass]="getEventBadgeClass(log.event)">
+        {{ log.event || '-' }}
+      </span>
+    </td>
+
+    <td>{{ log.subject_Ref || '-' }}</td>
+    <td>{{ log.api_Action_Type || '-' }}</td>
+
+   <td>
+  {{ log.created_At ? (log.created_At | date:'dd/MM/yyyy, hh:mm:ss a') : '-' }}
+</td>
+    <td class="td-message">{{ log.message || '-' }}</td>
+
+    <td>
+      <button class="btn-primary" (click)="openDialog(log)">View</button>
+    </td>
+  </tr>
+</tbody>
+  </table>
+
+  <div *ngIf="!loading && logs.length === 0" class="empty-state">
+    <p>No logs found.</p>
+  </div>
+
+  <div class="pagination-controls" *ngIf="!loading && (pageNumber > 1 || logs.length === pageSize)">
+    <button class="btn-secondary" [disabled]="pageNumber === 1" (click)="onPrev()">Previous</button>
+    <span class="page-info">Page {{ pageNumber }}</span>
+    <button class="btn-secondary" [disabled]="logs.length < pageSize" (click)="onNext()">Next</button>
+  </div>
+</div>
+
+<app-log-details-dialog 
+  *ngIf="isDialogOpen" 
+  [log]="selectedLog" 
+  (close)="closeDialog()">
+</app-log-details-dialog>

@@ -1,0 +1,18 @@
+<div class="header-section">
+  <h1>MW Logs</h1>
+  <p>View and analyze central application logs</p>
+</div>
+
+<app-mw-logs-filter (filterChanged)="onFilterChanged($event)"></app-mw-logs-filter>
+
+<div *ngIf="error" class="error-banner">
+  {{ error }}
+</div>
+
+<app-mw-logs-table
+  [logs]="logs"
+  [loading]="loading"
+  [pageNumber]="pageNumber"
+  [pageSize]="pageSize"
+  (pageChange)="onPageChanged($event)">
+</app-mw-logs-table>

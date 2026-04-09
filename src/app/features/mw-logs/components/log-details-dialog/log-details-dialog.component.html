@@ -1,0 +1,70 @@
+<div class="modal-backdrop" (click)="onClose()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    
+    <div class="modal-header">
+      <h2>Log Details - <span class="badge" [ngClass]="getEventBadgeClass(log?.event)">{{ log?.event || 'Event' }}</span></h2>
+      <button class="close-btn" aria-label="Close modal" (click)="onClose()">
+        &times;
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Basic Log Information -->
+      <div class="basic-info">
+         <div class="info-item"><strong>Log Name:</strong> {{ log?.log_Name }}</div>
+         <div class="info-item"><strong>Timestamp:</strong> {{ log?.created_At | date:'medium' }}</div>
+         <div class="info-item"><strong>Message:</strong> {{ log?.message }}</div>
+      </div>
+
+      <hr class="divider"/>
+
+      <!-- Parsed JSON Properties -->
+      <div class="properties-section">
+        <h3>Payload Properties</h3>
+
+        <ng-container *ngIf="parsedProperties; else fallbackProperties">
+          
+          <div *ngIf="parsedProperties.request" class="property-block">
+            <strong>Request:</strong>
+            <div class="json-viewer">
+              <!-- Using string representation if it's already a formatted string, else JSON pipe -->
+              <pre><code>{{ isObject(parsedProperties.request) ? (parsedProperties.request | json) : parsedProperties.request }}</code></pre>
+            </div>
+          </div>
+
+          <div *ngIf="parsedProperties.response" class="property-block">
+            <strong>Response:</strong>
+            <div class="json-viewer">
+              <pre><code>{{ parsedProperties.response | json }}</code></pre>
+            </div>
+          </div>
+
+          <!-- Fallback if JSON parsed successfully but missing standard request/response schema -->
+          <div *ngIf="!parsedProperties.request && !parsedProperties.response" class="property-block">
+            <div class="json-viewer">
+              <pre><code>{{ parsedProperties | json }}</code></pre>
+            </div>
+          </div>
+
+        </ng-container>
+
+        <!-- Fallback if not parsable or missing -->
+        <ng-template #fallbackProperties>
+          <div *ngIf="log?.properties" class="property-block">
+            <div class="json-viewer raw-viewer">
+              {{ log.properties }}
+            </div>
+          </div>
+          <p class="no-data" *ngIf="!log?.properties">
+            No properties provided in this log.
+          </p>
+        </ng-template>
+
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-primary" (click)="onClose()">Close</button>
+    </div>
+  </div>
+</div>
